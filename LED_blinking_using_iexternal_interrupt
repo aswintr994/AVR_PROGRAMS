@@ -1,0 +1,43 @@
+/*
+ * Led-blinking-using-ext-interrupt.c
+ *
+ * Created: 23-07-2026 12:31:35 AM
+ * Author : ASWIN TR
+ */ 
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+/*step 4 : ISR for ext interrupt INTO*/
+ISR(INT0_vect)
+{
+	PORTB ^= (1 << PB5);	
+}
+
+/*external interrupt INTO config*/
+void external_interrupt_config()
+{
+	//step1 : enabling sei() ie global interrupt
+	sei();
+	//step2 : enabling interrupt INT0
+	EIMSK |= (1 << INT0);
+	//step3 : config the interrupt trigger : rising edge ie ISC00 AND ISC01 ARE HIGH 
+	EICRA |= ((1 << ISC01) | (1 << ISC00));
+}
+
+int main(void)
+{
+	//PD2 config as i/p for ext interrupt
+	DDRD &= ~(1 << DDD2);
+	//LED config
+	DDRB |= (1 << DDB5);
+	//calling external_interrupt_config fn
+	external_interrupt_config();
+	
+    /* Replace with your application code */
+    while (1) 
+    {
+		
+    }
+}
+
